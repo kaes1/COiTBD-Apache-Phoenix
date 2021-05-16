@@ -1,4 +1,4 @@
-package pl.polsl;
+package pl.polsl.udf;
 
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.phoenix.expression.Expression;
@@ -24,29 +24,20 @@ public class UppercaseFunction extends ScalarFunction {
 
     @Override
     public boolean evaluate(Tuple tuple, ImmutableBytesWritable ptr) {
-        // Get the child argument and evaluate it first
-        if (!getChildExpression().evaluate(tuple, ptr)) {
+        Expression arg1Expr = children.get(0);
+
+        if (!arg1Expr.evaluate(tuple, ptr))
             return false;
-        }
-
-        if (ptr.getLength() == 0) {
+        if (ptr.getLength() == 0)
             return true;
-        }
 
-        //SortOrder?
-        String sourceStr = (String) PVarchar.INSTANCE.toObject(ptr);
+        String sourceStr = (String) PVarchar.INSTANCE.toObject(ptr, arg1Expr.getSortOrder());
+
         if (sourceStr == null) {
             return true;
         }
 
-
-        //Do whatever
         String uppercased = sourceStr.toUpperCase();
-
-
-
-
-
 
         ptr.set(PVarchar.INSTANCE.toBytes(uppercased));
         return true;
@@ -60,9 +51,5 @@ public class UppercaseFunction extends ScalarFunction {
     @Override
     public String getName() {
         return NAME;
-    }
-
-    private Expression getChildExpression() {
-        return children.get(0);
     }
 }

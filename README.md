@@ -7,4 +7,4 @@ Projekt na przedmiot COiTBD oparty o Apache Phoenix.
 - Zainstalowany Maven 
 
 # Budowanie jar
-W głównym katalogu projekut należy uruchomić `mvn clean install`. W przypadku sukcesu w folderze target powstanie plik jar.  
+W głównym katalogu projektu należy uruchomić `mvn clean install`. W przypadku sukcesu w folderze target powstanie plik jar.  
