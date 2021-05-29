@@ -2,7 +2,6 @@ package pl.polsl.linguisticValue;
 
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.ListUtils;
 import pl.polsl.fuzzy.Trapezoid;
 
 import java.util.*;
@@ -15,10 +14,11 @@ public class LinguisticValueManager {
 
     private LinguisticValueManager() {
         List<LinguisticValue> initialLinguisticValues = new ArrayList<>();
-        initialLinguisticValues.add(new LinguisticValue("Low", new Trapezoid(0, 5,10,15)));
-        initialLinguisticValues.add(new LinguisticValue("Medium", new Trapezoid(10, 15,20,25)));
-        initialLinguisticValues.add(new LinguisticValue("High", new Trapezoid(20, 25,30,35)));
-        linguisticValueNamespaces.put("Initial", initialLinguisticValues);
+        linguisticValueNamespaces = new HashMap<>();
+        initialLinguisticValues.add(new LinguisticValue("LOW", new Trapezoid(0, 5,10,15)));
+        initialLinguisticValues.add(new LinguisticValue("MEDIUM", new Trapezoid(10, 15,20,25)));
+        initialLinguisticValues.add(new LinguisticValue("HIGH", new Trapezoid(20, 25,30,35)));
+        linguisticValueNamespaces.put("INITIAL", initialLinguisticValues);
     }
 
     public static LinguisticValueManager getInstance() {
@@ -34,22 +34,22 @@ public class LinguisticValueManager {
     }
 
     public Optional<LinguisticValue> getLinguisticValue(String namespace, String name) {
-        List<LinguisticValue> linguisticValues = linguisticValueNamespaces.get(namespace);
+        List<LinguisticValue> linguisticValues = linguisticValueNamespaces.get(namespace.toUpperCase());
 
         if (CollectionUtils.isEmpty(linguisticValues))
             return Optional.empty();
 
         return linguisticValues.stream()
-                .filter(linguisticValue -> linguisticValue.getName().equals(name))
+                .filter(linguisticValue -> linguisticValue.getName().equals(name.toUpperCase()))
                 .findFirst();
     }
 
     public void addLinguisticValue(String namespace, String name, Trapezoid membershipTrapezoid) {
-        LinguisticValue linguisticValue = new LinguisticValue(name, membershipTrapezoid);
-        if (linguisticValueNamespaces.containsKey(namespace)) {
-            linguisticValueNamespaces.get(namespace).add(linguisticValue);
+        LinguisticValue linguisticValue = new LinguisticValue(name.toUpperCase(), membershipTrapezoid);
+        if (linguisticValueNamespaces.containsKey(namespace.toUpperCase())) {
+            linguisticValueNamespaces.get(namespace.toUpperCase()).add(linguisticValue);
         } else {
-            linguisticValueNamespaces.put(namespace, Collections.singletonList(linguisticValue));
+            linguisticValueNamespaces.put(namespace.toUpperCase(), Collections.singletonList(linguisticValue));
         }
     }
 
