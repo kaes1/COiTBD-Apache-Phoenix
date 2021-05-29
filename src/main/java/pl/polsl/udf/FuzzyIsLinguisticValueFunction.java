@@ -20,8 +20,9 @@ import java.util.List;
 import java.util.Optional;
 
 @BuiltInFunction(name = FuzzyIsLinguisticValueFunction.NAME, args = {
-        @Argument(allowedTypes = {PDouble.class, PDecimal.class}), // value
-        @Argument(allowedTypes = {PVarchar.class}, isConstant=true) // linguistic value name
+        @Argument(allowedTypes = {PDouble.class, PDecimal.class}),   // value
+        @Argument(allowedTypes = {PVarchar.class}, isConstant=true), // linguistic value namespace
+        @Argument(allowedTypes = {PVarchar.class}, isConstant=true)  // linguistic value name
 })
 public class FuzzyIsLinguisticValueFunction extends ScalarFunction {
 
@@ -46,9 +47,14 @@ public class FuzzyIsLinguisticValueFunction extends ScalarFunction {
         if (ptr.getLength() == 0) return true;
         String arg2 = (String) PVarchar.INSTANCE.toObject(ptr, arg2Expr.getSortOrder());
 
+        Expression arg3Expr = children.get(2);
+        if (!arg3Expr.evaluate(tuple, ptr)) return false;
+        if (ptr.getLength() == 0) return true;
+        String arg3 = (String) PVarchar.INSTANCE.toObject(ptr, arg3Expr.getSortOrder());
+
         LinguisticValueManager linguisticValueManager = LinguisticValueManager.getInstance();
 
-        Optional<LinguisticValue> linguisticValue = linguisticValueManager.getLinguisticValue(arg2);
+        Optional<LinguisticValue> linguisticValue = linguisticValueManager.getLinguisticValue(arg2, arg3);
 
         if (!linguisticValue.isPresent()) {
             return false;
