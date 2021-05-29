@@ -15,10 +15,9 @@ public class LinguisticValueManager {
     private LinguisticValueManager() {
         List<LinguisticValue> initialLinguisticValues = new ArrayList<>();
         linguisticValueNamespaces = new HashMap<>();
-        initialLinguisticValues.add(new LinguisticValue("LOW", new Trapezoid(0, 5,10,15)));
-        initialLinguisticValues.add(new LinguisticValue("MEDIUM", new Trapezoid(10, 15,20,25)));
-        initialLinguisticValues.add(new LinguisticValue("HIGH", new Trapezoid(20, 25,30,35)));
-        linguisticValueNamespaces.put("INITIAL", initialLinguisticValues);
+        createLinguisticValue("Initial", "LOW", new Trapezoid(0, 5,10,15));
+        createLinguisticValue("Initial", "MEDIUM", new Trapezoid(10, 15,20,25));
+        createLinguisticValue("Initial", "HIGH", new Trapezoid(20, 25,30,35));
     }
 
     public static LinguisticValueManager getInstance() {
@@ -44,12 +43,14 @@ public class LinguisticValueManager {
                 .findFirst();
     }
 
-    public void addLinguisticValue(String namespace, String name, Trapezoid membershipTrapezoid) {
+    public void createLinguisticValue(String namespace, String name, Trapezoid membershipTrapezoid) {
         LinguisticValue linguisticValue = new LinguisticValue(name.toUpperCase(), membershipTrapezoid);
         if (linguisticValueNamespaces.containsKey(namespace.toUpperCase())) {
             linguisticValueNamespaces.get(namespace.toUpperCase()).add(linguisticValue);
         } else {
-            linguisticValueNamespaces.put(namespace.toUpperCase(), Collections.singletonList(linguisticValue));
+            ArrayList<LinguisticValue> list = new ArrayList<>();
+            list.add(linguisticValue);
+            linguisticValueNamespaces.put(namespace.toUpperCase(), list);
         }
     }
 

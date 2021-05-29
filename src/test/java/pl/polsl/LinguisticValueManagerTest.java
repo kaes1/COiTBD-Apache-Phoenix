@@ -17,9 +17,13 @@ public class LinguisticValueManagerTest {
 
         LinguisticValueManager manager = LinguisticValueManager.getInstance();
 
-        Optional<LinguisticValue> linguisticValue = manager.getLinguisticValue("Initial", "Low");
+        Optional<LinguisticValue> linguisticValue = manager.getLinguisticValue("INITIAL", "Low");
+        Optional<LinguisticValue> linguisticValue2 = manager.getLinguisticValue("INITIALL", "Low");
+        Optional<LinguisticValue> linguisticValue3 = manager.getLinguisticValue("INITIAL", "Loww");
 
         assertTrue(linguisticValue.isPresent());
+        assertFalse(linguisticValue2.isPresent());
+        assertFalse(linguisticValue3.isPresent());
     }
 
 }

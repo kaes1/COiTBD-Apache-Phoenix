@@ -7,15 +7,12 @@ import org.apache.phoenix.parse.FunctionParseNode.Argument;
 import org.apache.phoenix.parse.FunctionParseNode.BuiltInFunction;
 import org.apache.phoenix.schema.tuple.Tuple;
 import org.apache.phoenix.schema.types.*;
-import pl.polsl.fuzzy.FuzzyAround;
 import pl.polsl.fuzzy.Trapezoid;
-import pl.polsl.linguisticValue.LinguisticValue;
 import pl.polsl.linguisticValue.LinguisticValueManager;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 
 @BuiltInFunction(name = FuzzyCreateLinguisticValueFunction.NAME, args = {
         @Argument(allowedTypes = {PVarchar.class}, isConstant=true), // linguistic value namespace
@@ -70,7 +67,7 @@ public class FuzzyCreateLinguisticValueFunction extends ScalarFunction {
 
         LinguisticValueManager linguisticValueManager = LinguisticValueManager.getInstance();
 
-        linguisticValueManager.addLinguisticValue(arg1, arg2, new Trapezoid(arg3,arg4,arg5,arg6));
+        linguisticValueManager.createLinguisticValue(arg1, arg2, new Trapezoid(arg3,arg4,arg5,arg6));
 
         ptr.set(PDataType.TRUE_BYTES);
         return true;
