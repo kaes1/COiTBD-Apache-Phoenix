@@ -1,4 +1,4 @@
-package pl.polsl.udf;
+package pl.polsl.udf.fuzzy;
 
 import org.apache.phoenix.expression.Expression;
 import org.apache.phoenix.expression.function.JavaMathTwoArgumentFunction;
@@ -6,7 +6,7 @@ import org.apache.phoenix.parse.FunctionParseNode.Argument;
 import org.apache.phoenix.parse.FunctionParseNode.BuiltInFunction;
 import org.apache.phoenix.schema.types.PDecimal;
 import org.apache.phoenix.schema.types.PDouble;
-import pl.polsl.fuzzy.FuzzyAnd;
+import pl.polsl.fuzzyMath.FuzzyLogicOperators;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -28,7 +28,7 @@ public class FuzzyAndFunction extends JavaMathTwoArgumentFunction {
 
     @Override
     protected double compute(double firstArg, double secondArg) {
-        return FuzzyAnd.fuzzyAnd(firstArg, secondArg);
+        return FuzzyLogicOperators.fuzzyAnd(firstArg, secondArg);
     }
 
     @Override
