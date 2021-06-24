@@ -1,6 +1,5 @@
 package pl.polsl.linguisticVariable.parser;
 
-import lombok.Setter;
 import org.apache.commons.lang.StringUtils;
 import pl.polsl.linguisticVariable.LinguisticValue;
 import pl.polsl.linguisticVariable.LinguisticVariable;
@@ -16,18 +15,18 @@ import java.util.stream.Collectors;
 public class LinguisticVariableParser {
 
     private final LinguisticValueParser linguisticValueParser;
-    private final NameValidator nameValidator;
+    private final NameParser nameParser;
 
     private final static String GENERAL_PARSING_ERROR = "Failed to parse Linguistic Variable";
 
     public LinguisticVariableParser() {
         this.linguisticValueParser = new LinguisticValueParser();
-        this.nameValidator = new NameValidator();
+        this.nameParser = new NameParser();
     }
 
-    public LinguisticVariableParser(LinguisticValueParser linguisticValueParser, NameValidator nameValidator) {
+    public LinguisticVariableParser(LinguisticValueParser linguisticValueParser, NameParser nameParser) {
         this.linguisticValueParser = linguisticValueParser;
-        this.nameValidator = nameValidator;
+        this.nameParser = nameParser;
     }
 
     public LinguisticVariable parse(String input) throws LinguisticVariableParserException {
@@ -42,8 +41,7 @@ public class LinguisticVariableParser {
             throw new LinguisticVariableParserException(GENERAL_PARSING_ERROR);
         }
 
-        String variableName = inputSplit[0];
-        nameValidator.validateName(variableName);
+        String variableName = nameParser.parse(inputSplit[0]);
 
         String[] valuesSplit = inputSplit[1].split("\\|");
 
