@@ -2,6 +2,7 @@ package pl.polsl.udf;
 
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.phoenix.expression.Expression;
+import org.apache.phoenix.expression.LiteralExpression;
 import org.apache.phoenix.expression.function.ScalarFunction;
 import org.apache.phoenix.schema.tuple.Tuple;
 import org.apache.phoenix.schema.types.PDecimal;
@@ -17,6 +18,24 @@ public abstract class UdfBase extends ScalarFunction {
 
     public UdfBase(List<Expression> children) {
         super(children);
+    }
+
+    protected String getConstantStringArgument(int argumentNumber) {
+        LiteralExpression expression = (LiteralExpression) getChildren().get(argumentNumber);
+        Object value = expression.getValue();
+        return ((String) value);
+    }
+
+    protected Double getConstantDoubleArgument(int argumentNumber) {
+        LiteralExpression expression = (LiteralExpression) getChildren().get(argumentNumber);
+        Object value = expression.getValue();
+        if (value instanceof BigDecimal) {
+            return ((BigDecimal) value).doubleValue();
+        } else if (value instanceof Integer) {
+            return ((Integer) value).doubleValue();
+        } else {
+            return ((Double) value);
+        }
     }
 
     protected String getStringArgument(int argumentNumber, Tuple tuple, ImmutableBytesWritable ptr) throws ArgumentEvaluationFailedException {

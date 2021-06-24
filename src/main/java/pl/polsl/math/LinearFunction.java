@@ -18,6 +18,10 @@ public class LinearFunction {
         // -(y2-y1)x + (x2-x1)y - y1x2 + y2x1 = 0
         A = -(P2.getY() - P1.getY());
         B = P2.getX() - P1.getX();
-        C = - P1.getY() * P2.getX() + P2.getY() * P1.getX();
+        C = -P1.getY() * P2.getX() + P2.getY() * P1.getX();
+    }
+
+    public double evaluate(double x) {
+        return (-A * x - C) / B;
     }
 }

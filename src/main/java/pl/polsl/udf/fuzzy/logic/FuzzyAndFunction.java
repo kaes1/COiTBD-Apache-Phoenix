@@ -1,4 +1,4 @@
-package pl.polsl.udf.fuzzy;
+package pl.polsl.udf.fuzzy.logic;
 
 import org.apache.phoenix.expression.Expression;
 import org.apache.phoenix.expression.function.JavaMathTwoArgumentFunction;
@@ -11,24 +11,24 @@ import pl.polsl.fuzzyMath.FuzzyLogicOperators;
 import java.sql.SQLException;
 import java.util.List;
 
-@BuiltInFunction(name = FuzzyOrFunction.NAME, args = {
+@BuiltInFunction(name = FuzzyAndFunction.NAME, args = {
         @Argument(allowedTypes = {PDouble.class, PDecimal.class}),
         @Argument(allowedTypes = {PDouble.class, PDecimal.class})
 })
-public class FuzzyOrFunction extends JavaMathTwoArgumentFunction {
+public class FuzzyAndFunction extends JavaMathTwoArgumentFunction {
 
-    public static final String NAME = "FUZZY_OR";
+    public static final String NAME = "FUZZY_AND";
 
-    public FuzzyOrFunction() {
+    public FuzzyAndFunction() {
     }
 
-    public FuzzyOrFunction(final List<Expression> children) throws SQLException {
+    public FuzzyAndFunction(final List<Expression> children) throws SQLException {
         super(children);
     }
 
     @Override
     protected double compute(double firstArg, double secondArg) {
-        return FuzzyLogicOperators.fuzzyOr(firstArg, secondArg);
+        return FuzzyLogicOperators.fuzzyAnd(firstArg, secondArg);
     }
 
     @Override

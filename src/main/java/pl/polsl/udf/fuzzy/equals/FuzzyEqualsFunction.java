@@ -1,4 +1,4 @@
-package pl.polsl.udf.fuzzy;
+package pl.polsl.udf.fuzzy.equals;
 
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.phoenix.expression.Expression;
@@ -9,8 +9,6 @@ import org.apache.phoenix.schema.types.PDataType;
 import org.apache.phoenix.schema.types.PDecimal;
 import org.apache.phoenix.schema.types.PDouble;
 import pl.polsl.fuzzyMath.FuzzyEquals;
-import pl.polsl.membershipFunction.MembershipFunction;
-import pl.polsl.membershipFunction.TriangularMembershipFunction;
 import pl.polsl.udf.ArgumentEvaluationFailedException;
 import pl.polsl.udf.UdfBase;
 
@@ -26,31 +24,37 @@ import java.util.List;
 public class FuzzyEqualsFunction extends UdfBase {
     public static final String NAME = "FUZZY_EQUALS";
 
+    private Double fuzzify1;
+    private Double fuzzify2;
+
     public FuzzyEqualsFunction() {
+        initialize();
     }
 
     public FuzzyEqualsFunction(final List<Expression> children) throws SQLException {
         super(children);
+        initialize();
+    }
+
+    private void initialize() {
+        fuzzify1 = getConstantDoubleArgument(1);
+        fuzzify2 = getConstantDoubleArgument(3);
     }
 
     @Override
     public boolean evaluate(Tuple tuple, ImmutableBytesWritable ptr) {
-        Double arg1, arg2, arg3, arg4;
+        Double value1, value2;
 
         try {
-            arg1 = getDoubleArgument(0, tuple, ptr);
-            if (arg1 == null) return true;
-            arg2 = getDoubleArgument(1, tuple, ptr);
-            if (arg2 == null) return true;
-            arg3 = getDoubleArgument(2, tuple, ptr);
-            if (arg3 == null) return true;
-            arg4 = getDoubleArgument(3, tuple, ptr);
-            if (arg4 == null) return true;
+            value1 = getDoubleArgument(0, tuple, ptr);
+            if (value1 == null) return true;
+            value2 = getDoubleArgument(2, tuple, ptr);
+            if (value2 == null) return true;
         } catch (ArgumentEvaluationFailedException exception) {
             return false;
         }
 
-        double result = FuzzyEquals.fuzzifyAndCalculateEquals(arg1, arg2, arg3, arg4);
+        double result = FuzzyEquals.fuzzifyAndCalculateEquals(value1, fuzzify1, value2, fuzzify2);
 
         PDataType returnType = getDataType();
         ptr.set(new byte[returnType.getByteSize()]);

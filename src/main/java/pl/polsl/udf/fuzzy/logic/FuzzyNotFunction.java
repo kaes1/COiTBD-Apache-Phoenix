@@ -1,4 +1,4 @@
-package pl.polsl.udf.fuzzy;
+package pl.polsl.udf.fuzzy.logic;
 
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.phoenix.expression.Expression;
@@ -31,16 +31,16 @@ public class FuzzyNotFunction extends UdfBase {
 
     @Override
     public boolean evaluate(Tuple tuple, ImmutableBytesWritable ptr) {
-        Double arg1;
+        Double argument;
 
         try {
-            arg1 = getDoubleArgument(0, tuple, ptr);
-            if (arg1 == null) return true;
+            argument = getDoubleArgument(0, tuple, ptr);
+            if (argument == null) return true;
         } catch (ArgumentEvaluationFailedException exception) {
             return false;
         }
 
-        double result = FuzzyLogicOperators.fuzzyNot(arg1);
+        double result = FuzzyLogicOperators.fuzzyNot(argument);
 
         PDataType returnType = getDataType();
         ptr.set(new byte[returnType.getByteSize()]);

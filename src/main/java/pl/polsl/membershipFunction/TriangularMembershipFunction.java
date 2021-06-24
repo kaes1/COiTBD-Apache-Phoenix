@@ -1,16 +1,15 @@
 package pl.polsl.membershipFunction;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import pl.polsl.math.LinearFunction;
+import lombok.Getter;
 
-@Data
+@Getter
 @AllArgsConstructor
 public class TriangularMembershipFunction implements MembershipFunction {
 
-    private double a;
-    private double b;
-    private double c;
+    private final double a;
+    private final double b;
+    private final double c;
 
     @Override
     public double calculateMembership(double x) {
@@ -25,7 +24,6 @@ public class TriangularMembershipFunction implements MembershipFunction {
 
         if (x > b && x <= c) {
             double membership = 1 - (b - x) / (b - c);
-
             return membership;
         }
 

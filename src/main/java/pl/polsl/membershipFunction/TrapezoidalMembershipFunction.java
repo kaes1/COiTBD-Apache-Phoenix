@@ -1,16 +1,16 @@
 package pl.polsl.membershipFunction;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 @AllArgsConstructor
 public class TrapezoidalMembershipFunction implements MembershipFunction {
 
-    private double a;
-    private double b;
-    private double c;
-    private double d;
+    private final double a;
+    private final double b;
+    private final double c;
+    private final double d;
 
     @Override
     public double calculateMembership(double x) {

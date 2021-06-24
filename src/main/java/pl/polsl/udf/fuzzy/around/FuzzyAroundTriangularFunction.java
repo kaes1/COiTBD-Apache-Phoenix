@@ -1,4 +1,4 @@
-package pl.polsl.udf.fuzzy;
+package pl.polsl.udf.fuzzy.around;
 
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.phoenix.expression.Expression;
@@ -8,7 +8,6 @@ import org.apache.phoenix.schema.tuple.Tuple;
 import org.apache.phoenix.schema.types.PDataType;
 import org.apache.phoenix.schema.types.PDecimal;
 import org.apache.phoenix.schema.types.PDouble;
-import pl.polsl.membershipFunction.MembershipFunction;
 import pl.polsl.membershipFunction.TriangularMembershipFunction;
 import pl.polsl.udf.ArgumentEvaluationFailedException;
 import pl.polsl.udf.UdfBase;
@@ -23,38 +22,38 @@ import java.util.List;
         @Argument(allowedTypes = {PDouble.class, PDecimal.class}, isConstant=true)  // triangle C
 })
 public class FuzzyAroundTriangularFunction extends UdfBase {
-    //TODO init like in CollationKeyFunction?
-    //TODO trapezoids a,b,c,d are constant, can we assign them in initialize via getLiteralValue(1, Double.class) like in CollationKeyFunction?
-
     public static final String NAME = "FUZZY_AROUND_TRIANGULAR";
 
+    private TriangularMembershipFunction membershipFunction;
+
     public FuzzyAroundTriangularFunction() {
+        initialize();
     }
 
     public FuzzyAroundTriangularFunction(final List<Expression> children) throws SQLException {
         super(children);
+        initialize();
+    }
+
+    private void initialize() {
+        Double triangleA = getConstantDoubleArgument(1);
+        Double triangleB = getConstantDoubleArgument(2);
+        Double triangleC = getConstantDoubleArgument(3);
+        membershipFunction = new TriangularMembershipFunction(triangleA, triangleB, triangleC);
     }
 
     @Override
     public boolean evaluate(Tuple tuple, ImmutableBytesWritable ptr) {
-        Double arg1, arg2, arg3, arg4;
+        Double value;
 
         try {
-            arg1 = getDoubleArgument(0, tuple, ptr);
-            if (arg1 == null) return true;
-            arg2 = getDoubleArgument(1, tuple, ptr);
-            if (arg2 == null) return true;
-            arg3 = getDoubleArgument(2, tuple, ptr);
-            if (arg3 == null) return true;
-            arg4 = getDoubleArgument(3, tuple, ptr);
-            if (arg4 == null) return true;
+            value = getDoubleArgument(0, tuple, ptr);
+            if (value == null) return true;
         } catch (ArgumentEvaluationFailedException exception) {
             return false;
         }
 
-        MembershipFunction membershipFunction = new TriangularMembershipFunction(arg2, arg3, arg4);
-
-        double result = membershipFunction.calculateMembership(arg1);
+        double result = membershipFunction.calculateMembership(value);
 
         PDataType returnType = getDataType();
         ptr.set(new byte[returnType.getByteSize()]);

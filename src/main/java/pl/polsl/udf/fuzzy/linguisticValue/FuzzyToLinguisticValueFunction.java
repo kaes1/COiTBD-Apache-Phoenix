@@ -1,4 +1,4 @@
-package pl.polsl.udf.fuzzy;
+package pl.polsl.udf.fuzzy.linguisticValue;
 
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.phoenix.expression.Expression;
@@ -11,7 +11,7 @@ import org.apache.phoenix.schema.types.PDouble;
 import org.apache.phoenix.schema.types.PVarchar;
 import pl.polsl.linguisticVariable.LinguisticValue;
 import pl.polsl.linguisticVariable.LinguisticVariable;
-import pl.polsl.linguisticVariable.LinguisticVariableManager;
+import pl.polsl.linguisticVariable.parser.LinguisticVariableParser;
 import pl.polsl.udf.ArgumentEvaluationFailedException;
 import pl.polsl.udf.UdfBase;
 
@@ -21,41 +21,42 @@ import java.util.Optional;
 
 @BuiltInFunction(name = FuzzyToLinguisticValueFunction.NAME, args = {
         @Argument(allowedTypes = {PDouble.class, PDecimal.class}),   // value
-        @Argument(allowedTypes = {PVarchar.class}, isConstant = true)  // linguistic value namespace
+        @Argument(allowedTypes = {PVarchar.class}, isConstant = true)  // linguistic variable definition
 })
 public class FuzzyToLinguisticValueFunction extends UdfBase {
 
     public static final String NAME = "FUZZY_TO_LINGUISTIC_VALUE";
 
+    private String linguisticVariableDefinition;
+    private LinguisticVariable linguisticVariable;
+
     public FuzzyToLinguisticValueFunction() {
+        initialize();
     }
 
     public FuzzyToLinguisticValueFunction(final List<Expression> children) throws SQLException {
         super(children);
+        initialize();
+    }
+
+    private void initialize() {
+        linguisticVariableDefinition = getConstantStringArgument(1);
+        LinguisticVariableParser linguisticVariableParser = new LinguisticVariableParser();
+        linguisticVariable = linguisticVariableParser.parse(linguisticVariableDefinition);
     }
 
     @Override
     public boolean evaluate(Tuple tuple, ImmutableBytesWritable ptr) {
         Double arg1;
-        String arg2;
 
         try {
             arg1 = getDoubleArgument(0, tuple, ptr);
             if (arg1 == null) return true;
-            arg2 = getStringArgument(1, tuple, ptr);
-            if (arg2 == null) return true;
         } catch (ArgumentEvaluationFailedException exception) {
             return false;
         }
 
-        LinguisticVariableManager linguisticVariableManager = LinguisticVariableManager.getInstance();
-        Optional<LinguisticVariable> linguisticVariable = linguisticVariableManager.getLinguisticVariable(arg2);
-
-        if (!linguisticVariable.isPresent()) {
-            return false;
-        }
-
-        Optional<LinguisticValue> linguisticValue = linguisticVariable.get().getMatchingLinguisticValue(arg1);
+        Optional<LinguisticValue> linguisticValue = linguisticVariable.getMatchingLinguisticValue(arg1);
 
         if (!linguisticValue.isPresent()) {
             return false;
