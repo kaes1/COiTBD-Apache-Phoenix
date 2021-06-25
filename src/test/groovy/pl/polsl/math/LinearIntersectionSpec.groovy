@@ -1,35 +1,46 @@
 package pl.polsl.math
 
 import spock.lang.Specification
-
-import static org.hamcrest.MatcherAssert.assertThat
-import static org.hamcrest.Matchers.closeTo
+import spock.lang.Unroll
 
 class LinearIntersectionSpec extends Specification {
 
-    def "shouldCalculateLinearIntersection"() {
-        given:
-        LinearFunction linearFunction1 = new LinearFunction(-1, 1, 0) // y = x
-        LinearFunction linearFunction2 = new LinearFunction(1, 1, 0) // y = -x
-
+    @Unroll("should return intersection point #expectedIntersectionPoint between function \"#equation1\" and \"#equation2\"")
+    def "should calculate intersection point between two linear functions"() {
         when:
-        Point intersectionPoint = LinearIntersection.calculateIntersectionPoint(linearFunction1, linearFunction2)
+        Point intersectionPoint = LinearIntersection.calculateIntersectionPoint(function1, function2)
 
         then:
-        assertThat(intersectionPoint.getX(), closeTo(0, 0))
-        assertThat(intersectionPoint.getY(), closeTo(0, 0))
+        intersectionPoint == expectedIntersectionPoint
+
+        where:
+        function1                 | equation1   | function2                 | equation2    | expectedIntersectionPoint
+        new LinearFunction(1, 0)  | "y = x"     | new LinearFunction(-1, 0) | "y = -x"     | new Point(0, 0)
+        new LinearFunction(1, 0)  | "y = -x"    | new LinearFunction(-1, 0) | "y = x"      | new Point(0, 0)
+        new LinearFunction(1, -2) | "y = x - 2" | new LinearFunction(-1, 1) | "y = -x + 1" | new Point(1.5, -0.5)
+        new LinearFunction(-1, 2) | "y = -x + 2" | new LinearFunction(1, -1) | "y = x - 1" | new Point(1.5, 0.5)
     }
 
-    def "shouldCalculateLinearIntersectionForComplexFunction"() {
+    def "should throw exception when calculating intersection of equal linear functions"() {
         given:
-        LinearFunction linearFunction1 = new LinearFunction(-1, 1, 2) // y = x - 2
-        LinearFunction linearFunction2 = new LinearFunction(1, 1, -1) // y = -x + 1
+        LinearFunction linearFunction = new LinearFunction(2, 10)
 
         when:
-        Point intersectionPoint = LinearIntersection.calculateIntersectionPoint(linearFunction1, linearFunction2)
+        LinearIntersection.calculateIntersectionPoint(linearFunction, linearFunction)
 
         then:
-        assertThat(intersectionPoint.getX(), closeTo(1.5f, 0))
-        assertThat(intersectionPoint.getY(), closeTo(-0.5f, 0))
+        thrown MathException
+    }
+
+    def "should throw exception when calculating intersection of parallel lines"() {
+        given:
+        LinearFunction linearFunction1 = new LinearFunction(2, 10)
+        LinearFunction linearFunction2 = new LinearFunction(2, 15)
+
+        when:
+        LinearIntersection.calculateIntersectionPoint(linearFunction1, linearFunction2)
+
+        then:
+        thrown MathException
     }
 }
