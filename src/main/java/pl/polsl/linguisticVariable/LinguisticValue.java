@@ -9,4 +9,8 @@ import pl.polsl.membershipFunction.MembershipFunction;
 public class LinguisticValue {
     private final String name;
     private final MembershipFunction membershipFunction;
+
+    public double calculateMembership(double value) {
+        return membershipFunction.calculateMembership(value);
+    }
 }

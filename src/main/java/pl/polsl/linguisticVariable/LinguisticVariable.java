@@ -30,8 +30,8 @@ public class LinguisticVariable {
     }
 
     private Integer compareLinguisticValues(LinguisticValue lv1, LinguisticValue lv2, double value) {
-        Double membership1 = lv1.getMembershipFunction().calculateMembership(value);
-        Double membership2 = lv2.getMembershipFunction().calculateMembership(value);
+        Double membership1 = lv1.calculateMembership(value);
+        Double membership2 = lv2.calculateMembership(value);
         return membership1.compareTo(membership2);
     }
 }

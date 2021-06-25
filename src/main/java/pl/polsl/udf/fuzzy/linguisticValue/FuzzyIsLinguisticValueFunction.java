@@ -61,7 +61,7 @@ public class FuzzyIsLinguisticValueFunction extends UdfBase {
             return false;
         }
 
-        double result = linguisticValue.getMembershipFunction().calculateMembership(arg1);
+        double result = linguisticValue.calculateMembership(arg1);
 
         PDataType returnType = getDataType();
         ptr.set(new byte[returnType.getByteSize()]);

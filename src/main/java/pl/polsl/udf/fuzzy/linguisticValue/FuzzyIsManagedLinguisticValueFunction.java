@@ -44,7 +44,8 @@ public class FuzzyIsManagedLinguisticValueFunction extends UdfBase {
         linguisticVariableName = getConstantStringArgument(1);
         linguisticValueName = getConstantStringArgument(2);
         linguisticVariableManager = LinguisticVariableManager.getInstance();
-        linguisticValue = linguisticVariableManager.getLinguisticValue(linguisticVariableName, linguisticValueName)
+        linguisticValue = linguisticVariableManager.getLinguisticVariable(linguisticVariableName)
+                .flatMap(linguisticVariable -> linguisticVariable.getLinguisticValue(linguisticValueName))
                 .orElseThrow(() -> new IllegalStateException("Cannot find linguistic value"));
     }
 
@@ -59,7 +60,7 @@ public class FuzzyIsManagedLinguisticValueFunction extends UdfBase {
             return false;
         }
 
-        double result = linguisticValue.getMembershipFunction().calculateMembership(arg1);
+        double result = linguisticValue.calculateMembership(arg1);
 
         PDataType returnType = getDataType();
         ptr.set(new byte[returnType.getByteSize()]);

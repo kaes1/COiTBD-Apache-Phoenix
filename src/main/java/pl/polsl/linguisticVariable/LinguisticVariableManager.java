@@ -26,20 +26,11 @@ public class LinguisticVariableManager {
         }
     }
 
-    public Optional<LinguisticValue> getLinguisticValue(String variableName, String valueName) {
-        Optional<LinguisticVariable> linguisticVariable = getLinguisticVariable(variableName);
-        return linguisticVariable.flatMap(variable -> variable.getLinguisticValue(valueName));
-    }
-
     public Optional<LinguisticVariable> getLinguisticVariable(String variableName) {
         return Optional.ofNullable(linguisticVariables.get(variableName.toUpperCase()));
     }
 
     public void saveLinguisticVariable(LinguisticVariable linguisticVariable) {
         linguisticVariables.put(linguisticVariable.getVariableName().toUpperCase(), linguisticVariable);
-    }
-
-    public void clearAllLinguisticVariables() {
-        linguisticVariables.clear();
     }
 }
