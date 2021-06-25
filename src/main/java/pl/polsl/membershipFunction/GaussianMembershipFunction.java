@@ -1,14 +1,20 @@
 package pl.polsl.membershipFunction;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
 public class GaussianMembershipFunction implements MembershipFunction {
 
     private final double mean;
     private final double standardDeviation;
+
+    public GaussianMembershipFunction(double mean, double standardDeviation) {
+        if (standardDeviation < 0) {
+            throw new IllegalStateException(String.format("Invalid gaussian membership function standard deviation: %f. Standard deviation cannot be negative.", standardDeviation));
+        }
+        this.mean = mean;
+        this.standardDeviation = standardDeviation;
+    }
 
     @Override
     public double calculateMembership(double value) {
