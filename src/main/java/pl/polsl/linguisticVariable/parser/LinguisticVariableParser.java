@@ -17,8 +17,6 @@ public class LinguisticVariableParser {
     private final LinguisticValueParser linguisticValueParser;
     private final NameParser nameParser;
 
-    private final static String GENERAL_PARSING_ERROR = "Failed to parse Linguistic Variable.";
-
     public LinguisticVariableParser() {
         this.linguisticValueParser = new LinguisticValueParser();
         this.nameParser = new NameParser();
@@ -38,16 +36,11 @@ public class LinguisticVariableParser {
         String[] inputSplit = input.split(":");
 
         if (inputSplit.length < 2) {
-            throw new LinguisticVariableParserException(GENERAL_PARSING_ERROR);
+            throw new LinguisticVariableParserException("Linguistic Variable input string has too few arguments.");
         }
 
         String variableName = nameParser.parse(inputSplit[0]);
-
         String[] valuesSplit = inputSplit[1].split("\\|");
-
-        if (valuesSplit.length < 1) {
-            throw new LinguisticVariableParserException("Not enough Linguistic Values in Variable.");
-        }
 
         List<LinguisticValue> linguisticValues = Arrays.stream(valuesSplit)
                 .map(this::parseValue)
