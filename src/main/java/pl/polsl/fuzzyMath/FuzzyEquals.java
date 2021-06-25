@@ -8,11 +8,11 @@ public class FuzzyEquals {
 
     public static double fuzzifyAndCalculateEquals(double value1, double fuzzify1, double value2, double fuzzify2) {
 
-        if (value1 == value2){
+        if (value1 == value2) {
             return 1;
         }
 
-        if (fuzzify1 == 0 && fuzzify2 == 0){
+        if (fuzzify1 == 0 && fuzzify2 == 0) {
             return value1 == value2 ? 1 : 0;
         }
 

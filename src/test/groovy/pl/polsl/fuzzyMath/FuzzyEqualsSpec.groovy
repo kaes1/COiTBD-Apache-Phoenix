@@ -7,81 +7,22 @@ import static org.hamcrest.Matchers.closeTo
 
 class FuzzyEqualsSpec extends Specification {
 
-    @Unroll("should return #expectedResult for #val1 , #val2")
-    def "should return expectedResult"() {
-        given:
-        double value1 = 10;
-        double value2 = 10;
-        double fuzzify1 = 2;
-        double fuzzify2 = 4;
-
+    @Unroll("should return #expectedResult for value #value1 fuzzified by #fuzzify1 and value #value2 fuzzified by #fuzzify2")
+    def "should calculate fuzzy equals"() {
         when:
-        double result = FuzzyEquals.fuzzifyAndCalculateEquals(value1, fuzzify1, value2, fuzzify2);
+        double result = FuzzyEquals.fuzzifyAndCalculateEquals(value1, fuzzify1, value2, fuzzify2)
 
         then:
-        result closeTo(1, 0)
+        result closeTo(expectedResult, 0)
 
         where:
-        expectedResult | val1 | val2
-        1              | 5    | 10
-        2              | 5    | 10
-        3              | 5    | 10
+        value1 | fuzzify1 | value2 | fuzzify2 | expectedResult
+        10     | 0        | 10     | 0        | 1
+        10     | 5        | 10     | 5        | 1
+        10     | 0        | 20     | 0        | 0
+        10     | 5        | 20     | 5        | 0
+        10     | 10       | 20     | 5        | 1d / 3d
+        20     | 10       | 10     | 5        | 1d / 3d
+        10     | 10       | 20     | 5        | 1d / 3d
     }
-
-    def "shouldReturnOneForSameValues"() {
-        given:
-        double value1 = 10
-        double value2 = 10
-        double fuzzify1 = 2
-        double fuzzify2 = 4
-
-        when:
-        double result = FuzzyEquals.fuzzifyAndCalculateEquals(value1, fuzzify1, value2, fuzzify2)
-
-        then:
-        result == 1
-    }
-
-    def "shouldCalculateFuzzyEquals"() {
-        given:
-        double value1 = 10
-        double value2 = 20
-        double fuzzify1 = 10
-        double fuzzify2 = 5
-
-        when:
-        double result = FuzzyEquals.fuzzifyAndCalculateEquals(value1, fuzzify1, value2, fuzzify2)
-
-        then:
-        result == 1.0f/3.0f
-    }
-
-    def "shouldCalculateFuzzyEqualsForValuesInDescendingOrder"() {
-        given:
-        double value1 = 20
-        double value2 = 10
-        double fuzzify1 = 10
-        double fuzzify2 = 5
-
-        when:
-        double result = FuzzyEquals.fuzzifyAndCalculateEquals(value1, fuzzify1, value2, fuzzify2)
-
-        then:
-        result == 1.0f/3.0f
-    }
-
-    def "shouldReturnZeroWhenValuesAreTooFarAway"() {
-        given:
-        double value1 = 10
-        double value2 = 20
-        double fuzzify1 = 2
-        double fuzzify2 = 4
-
-        when:
-        double result = FuzzyEquals.fuzzifyAndCalculateEquals(value1, fuzzify1, value2, fuzzify2)
-
-        then:
-        result == 0
-    }
-
 }
