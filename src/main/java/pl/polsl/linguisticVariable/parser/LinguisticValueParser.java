@@ -42,7 +42,7 @@ public class LinguisticValueParser {
 
         if (TRAPEZOID_MEMBERSHIP_TYPE.contains(membershipType)) {
             if (split.length < 6) {
-                throw new LinguisticVariableParserException("Not enough arguments for Trapezoidal membership function");
+                throw new LinguisticVariableParserException("Not enough arguments for Trapezoidal membership function.");
             }
             double a = doubleParser.parse(split[2]);
             double b = doubleParser.parse(split[3]);
@@ -51,7 +51,7 @@ public class LinguisticValueParser {
             return new LinguisticValue(valueName, new TrapezoidalMembershipFunction(a, b, c, d));
         } else if (TRIANGULAR_MEMBERSHIP_TYPE.contains(membershipType)) {
             if (split.length < 5) {
-                throw new LinguisticVariableParserException("Not enough arguments for Triangular membership function");
+                throw new LinguisticVariableParserException("Not enough arguments for Triangular membership function.");
             }
             double a = doubleParser.parse(split[2]);
             double b = doubleParser.parse(split[3]);
@@ -59,13 +59,13 @@ public class LinguisticValueParser {
             return new LinguisticValue(valueName, new TriangularMembershipFunction(a, b, c));
         } else if (GAUSSIAN_MEMBERSHIP_TYPE.contains(membershipType)) {
             if (split.length < 4) {
-                throw new LinguisticVariableParserException("Not enough arguments for Gaussian membership function");
+                throw new LinguisticVariableParserException("Not enough arguments for Gaussian membership function.");
             }
             double mean = doubleParser.parse(split[2]);
             double standardDeviation = doubleParser.parse(split[3]);
             return new LinguisticValue(valueName, new GaussianMembershipFunction(mean, standardDeviation));
         } else {
-            throw new LinguisticVariableParserException("Unrecognized membership function type");
+            throw new LinguisticVariableParserException("Unrecognized membership function type.");
         }
     }
 }

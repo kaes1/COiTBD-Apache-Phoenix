@@ -17,7 +17,7 @@ public class LinguisticVariableParser {
     private final LinguisticValueParser linguisticValueParser;
     private final NameParser nameParser;
 
-    private final static String GENERAL_PARSING_ERROR = "Failed to parse Linguistic Variable";
+    private final static String GENERAL_PARSING_ERROR = "Failed to parse Linguistic Variable.";
 
     public LinguisticVariableParser() {
         this.linguisticValueParser = new LinguisticValueParser();
@@ -32,7 +32,7 @@ public class LinguisticVariableParser {
     public LinguisticVariable parse(String input) throws LinguisticVariableParserException {
 
         if (StringUtils.isBlank(input)) {
-            throw new LinguisticVariableParserException("Linguistic Variable input string is empty");
+            throw new LinguisticVariableParserException("Linguistic Variable input string is empty.");
         }
 
         String[] inputSplit = input.split(":");
@@ -46,7 +46,7 @@ public class LinguisticVariableParser {
         String[] valuesSplit = inputSplit[1].split("\\|");
 
         if (valuesSplit.length < 1) {
-            throw new LinguisticVariableParserException("Not enough Linguistic Values in Variable");
+            throw new LinguisticVariableParserException("Not enough Linguistic Values in Variable.");
         }
 
         List<LinguisticValue> linguisticValues = Arrays.stream(valuesSplit)

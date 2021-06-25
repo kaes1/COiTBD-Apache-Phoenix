@@ -12,7 +12,7 @@ public class DoubleParser {
 
     public Double parse(String input) throws LinguisticVariableParserException {
         if (StringUtils.isBlank(input)) {
-            throw new LinguisticVariableParserException("String " + input + " is empty");
+            throw new LinguisticVariableParserException("String " + input + " is empty.");
         }
 
         input = input.trim();
@@ -26,7 +26,7 @@ public class DoubleParser {
         try {
             return Double.parseDouble(input);
         } catch (NumberFormatException exception) {
-            throw new LinguisticVariableParserException("Failed to parse numerical input " + input);
+            throw new LinguisticVariableParserException("Failed to parse numerical input " + input + ".");
         }
     }
 }
